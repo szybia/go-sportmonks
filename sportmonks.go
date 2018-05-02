@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 
 //Test http request
@@ -18,4 +19,15 @@ func Test() {
 	if err != nil {
 		os.Exit(0)
 	}
+}
+
+func setAPIToken(s string) {
+	if len(s) != 0 {
+		apiToken = s
+	}
+}
+
+func get(endpoint string) map[string]string {
+	payload := map[string]string{"api_token": apiToken}
+	return payload
 }
