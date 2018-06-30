@@ -2,6 +2,7 @@ package sportmonks
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +13,27 @@ var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 
 //SetAPIToken quite self-explanatory.
+//APIParameters specifies the options supplied to the Get function
+type APIParameters struct {
+	Endpoint string
+	Include  string
+	Page     int
+	AllPages bool
+}
+
+//NewAPIParameters uses
+func NewAPIParameters(endpoint string, include string, page int, allPages bool) *APIParameters {
+	A := APIParameters{
+		Endpoint: endpoint,
+		Include:  include,
+		Page:     NoPageDefault,
+		AllPages: allPages}
+
+	if page != NoPageDefault {
+		A.Page = page
+	}
+	return &A
+}
 func SetAPIToken(s string) {
 	if len(s) != 0 {
 		apiToken = s
