@@ -45,12 +45,15 @@ func SetAPIToken(s string) {
 }
 
 //Get API request.
-func Get(endpoint string) map[string]string {
-	payload := map[string]string{"api_token": apiToken}
+func Get(a APIParameters) ([]byte, error) {
+	if a.Endpoint == "" {
+		return []byte{}, errors.New("no endpoint provided")
+	}
 
-	req, err := http.NewRequest("GET", apiURL, nil)
+	requestURL := apiURL + a.Endpoint
+	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
-		log.Print(err)
+		log.Fatal(err)
 	}
 
 	q := req.URL.Query()
