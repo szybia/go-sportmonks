@@ -12,7 +12,6 @@ import (
 var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 
-//SetAPIToken quite self-explanatory.
 //APIParameters specifies the options supplied to the Get function
 type APIParameters struct {
 	Endpoint string
@@ -34,6 +33,11 @@ func NewAPIParameters(endpoint string, include string, page int, allPages bool) 
 	}
 	return &A
 }
+
+//NoPageDefault specifies the default when a specific page is not requested
+var NoPageDefault = -1
+
+//SetAPIToken sets the API token for sportmonks
 func SetAPIToken(s string) {
 	if len(s) != 0 {
 		apiToken = s
