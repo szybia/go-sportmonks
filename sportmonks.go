@@ -20,28 +20,12 @@ type APIParameters struct {
 	AllPages bool
 }
 
-//NewAPIParameters uses
-func NewAPIParameters(endpoint string, include string, page int, allPages bool) *APIParameters {
-	A := APIParameters{
-		Endpoint: endpoint,
-		Include:  include,
-		Page:     NoPageDefault,
-		AllPages: allPages}
-
-	if page != NoPageDefault {
-		A.Page = page
-	}
-	return &A
-}
-
-//NoPageDefault specifies the default when a specific page is not requested
-var NoPageDefault = -1
+//FirstPage specifies the default when a specific page is not requested
+var FirstPage = 0
 
 //SetAPIToken sets the API token for sportmonks
 func SetAPIToken(s string) {
-	if len(s) != 0 {
-		apiToken = s
-	}
+	apiToken = s
 }
 
 //Get API request
