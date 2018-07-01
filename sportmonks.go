@@ -3,10 +3,11 @@ package sportmonks
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/antonholmquist/jason"
 )
@@ -17,14 +18,6 @@ var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 type paginatedRequest struct {
 	pageNumber int64
 	data       []*jason.Object
-}
-
-//APIParameters specifies the options supplied to the Get function
-type APIParameters struct {
-	Endpoint string
-	Include  string
-	Page     int
-	AllPages bool
 }
 
 //FirstPage specifies the default when a specific page is not requested
