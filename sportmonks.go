@@ -44,13 +44,76 @@ func SetAPIToken(s string) {
 	}
 }
 
-//Get API request.
-func Get(a APIParameters) ([]byte, error) {
-	if a.Endpoint == "" {
+//Get API request
+func Get(endpoint string, include string, page int, allPages bool) ([]byte, error) {
+	if endpoint == "" {
 		return []byte{}, errors.New("no endpoint provided")
+	} else if apiToken == "" {
+		return []byte{}, errors.New("apiToken has not been set")
 	}
 
-	requestURL := apiURL + a.Endpoint
+	requestURL := apiURL + endpoint
+	r, err := http.NewRequest("GET", requestURL, nil)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	q := r.URL.Query()
+	q.Add("api_token", apiToken)
+	if include != "" {
+		q.Add("include", include)
+	}
+	if page != FirstPage {
+		q.Add("page", strconv.Itoa(page))
+		allPages = false
+	}
+	r.URL.RawQuery = q.Encode()
+
+	resp, err := http.Get(r.URL.String())
+	if err != nil {
+		return []byte{}, err
+	}
+
+	body, err := jason.NewObjectFromReader(resp.Body)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	data, err := body.GetObjectArray("data")
+	if err != nil {
+		return []byte{}, err
+	}
+
+	if allPages {
+		pages, err := body.GetInt64("meta", "pagination", "total_pages")
+		//	No error means endpoint is paginated
+		if err == nil {
+			if pages > 1 {
+				c := make(chan paginatedRequest)
+				requests := make([][]*jason.Object, pages)
+				for i := int64(2); i <= pages; i++ {
+					go getRequest(r.URL.String(), i, c)
+				}
+
+				for i := int64(2); i <= pages; i++ {
+					g := <-c
+					requests[g.pageNumber-1] = g.data
+				}
+
+				for i := int64(1); i < pages; i++ {
+					data = append(data, requests[i]...)
+				}
+
+			}
+		}
+	}
+	m, err := json.Marshal(data)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	return m, nil
+}
 	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
 		log.Fatal(err)
