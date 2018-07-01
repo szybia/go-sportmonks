@@ -63,9 +63,17 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 		return []byte{}, err
 	}
 
-	data, err := body.GetObjectArray("data")
+	var isObject bool
+	var dataObject *jason.Object
+	var dataObjectArray []*jason.Object
+
+	dataObjectArray, err = body.GetObjectArray("data")
 	if err != nil {
-		return []byte{}, err
+		dataObject, err = body.GetObject("data")
+		if err != nil {
+			return []byte{}, err
+		}
+		isObject = true
 	}
 
 	if allPages {
@@ -85,15 +93,24 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 				}
 
 				for i := int64(1); i < pages; i++ {
-					data = append(data, requests[i]...)
+					dataObjectArray = append(dataObjectArray, requests[i]...)
 				}
 
 			}
 		}
 	}
-	m, err := json.Marshal(data)
-	if err != nil {
-		return []byte{}, err
+	var m []byte
+
+	if isObject {
+		m, err = json.Marshal(dataObject)
+		if err != nil {
+			return []byte{}, err
+		}
+	} else {
+		m, err = json.Marshal(dataObjectArray)
+		if err != nil {
+			return []byte{}, err
+		}
 	}
 
 	return m, nil
