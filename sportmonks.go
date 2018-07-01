@@ -114,30 +114,37 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 
 	return m, nil
 }
+
+func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 
 	q := req.URL.Query()
-	q.Add("api_token", apiToken)
+	q.Add("page", strconv.FormatInt(pageNumber, 10))
 	req.URL.RawQuery = q.Encode()
 
 	resp, err := http.Get(req.URL.String())
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
+		return
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := jason.NewObjectFromReader(resp.Body)
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
+		return
 	}
 
-	var objmap map[string]interface{}
-	err = json.Unmarshal(body, &objmap)
+	data, err := body.GetObjectArray("data")
 	if err != nil {
-		log.Print(err)
+		log.Println(err)
+		return
 	}
+	c <- paginatedRequest{pageNumber, data}
+}
 
 	fmt.Println(req.URL.String())
 	return payload
