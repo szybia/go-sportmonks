@@ -185,7 +185,7 @@ func Seasons(include string, page int, allPages bool) ([]byte, error) {
 
 //Season request for specific season identified by ID
 func Season(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("leagues/%v", ID), include, FirstPage, false)
+	return Get(fmt.Sprintf("seasons/%v", ID), include, FirstPage, false)
 }
 
 //Fixture request for specific fixture identified by ID
