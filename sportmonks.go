@@ -3,14 +3,21 @@ package sportmonks
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/antonholmquist/jason"
 )
 
 var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
+
+type paginatedRequest struct {
+	pageNumber int64
+	data       []*jason.Object
+}
 
 //APIParameters specifies the options supplied to the Get function
 type APIParameters struct {
