@@ -14,6 +14,7 @@ import (
 
 var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
+var dataNotFound = "key 'data' not found"
 
 type paginatedRequest struct {
 	pageNumber int64
@@ -71,6 +72,10 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 	if err != nil {
 		dataObject, err = body.GetObject("data")
 		if err != nil {
+			if strings.Contains(fmt.Sprint(err), dataNotFound) {
+				//No errors. Empty response
+				return []byte{}, nil
+			}
 			return []byte{}, err
 		}
 		isObject = true
