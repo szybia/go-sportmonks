@@ -2,12 +2,12 @@
 Golang wrapper for the Sportmonks Soccer API  
 #### Pull requests and recommendations are welcome!
 
-### Installation
+## Installation
 ```bash
-go get github.com/BialkowskiSz/go-sportmonks
+$ go get github.com/BialkowskiSz/go-sportmonks
 ```
 
-### Usage
+## Usage
 ```golang
 import (
 	"fmt"
