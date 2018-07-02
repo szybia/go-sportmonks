@@ -15,7 +15,9 @@ import (
 var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 var dataNotFound = "key 'data' not found"
-var logger = log.Logger{}
+
+//Logger is a dedicated sportmonks logger
+var Logger = log.Logger{}
 
 type paginatedRequest struct {
 	pageNumber int64
@@ -127,7 +129,7 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
-		logger.Println(err)
+		Logger.Println(err)
 		c <- paginatedRequest{pageNumber, []*jason.Object{}}
 		return
 	}
@@ -138,14 +140,14 @@ func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 
 	resp, err := http.Get(req.URL.String())
 	if err != nil {
-		logger.Println(err)
+		Logger.Println(err)
 		c <- paginatedRequest{pageNumber, []*jason.Object{}}
 		return
 	}
 
 	body, err := jason.NewObjectFromReader(resp.Body)
 	if err != nil {
-		logger.Println(err)
+		Logger.Println(err)
 		c <- paginatedRequest{pageNumber, []*jason.Object{}}
 		return
 	}
@@ -163,7 +165,7 @@ func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 				c <- paginatedRequest{pageNumber, []*jason.Object{}}
 				return
 			}
-			logger.Println(err)
+			Logger.Println(err)
 			c <- paginatedRequest{pageNumber, []*jason.Object{}}
 			return
 		}
