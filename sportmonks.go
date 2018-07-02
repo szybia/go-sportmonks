@@ -399,12 +399,3 @@ func IntSliceToSepString(a []int, sep string) string {
 	}
 	return strings.Join(b, sep)
 }
-
-func main() {
-	SetAPIToken("j58Ebsd7X2GYGfz3iTLZA5OTJ9AMJoAGnICtd27jL5MYzACYlNnLc2ArLBog")
-	g, err := Get("fixtures/between/2016-01-01/2018-01-01", "", FirstPage, true)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(g))
-}
