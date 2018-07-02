@@ -68,9 +68,9 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 	var dataObject *jason.Object
 	var dataObjectArray []*jason.Object
 
-	dataObjectArray, err = body.GetObjectArray("data")
+	dataObjectArray, err = body.GetObjectArray("")
 	if err != nil {
-		dataObject, err = body.GetObject("data")
+		dataObject, err = body.GetObject("")
 		if err != nil {
 			if strings.Contains(fmt.Sprint(err), dataNotFound) {
 				//No errors. Empty response
@@ -100,7 +100,6 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 				for i := int64(1); i < pages; i++ {
 					dataObjectArray = append(dataObjectArray, requests[i]...)
 				}
-
 			}
 		}
 	}
@@ -117,7 +116,6 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 			return []byte{}, err
 		}
 	}
-
 	return m, nil
 }
 
@@ -145,12 +143,33 @@ func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 		return
 	}
 
-	data, err := body.GetObjectArray("data")
+	var isObject bool
+	var dataObject *jason.Object
+	var dataObjectArray []*jason.Object
+
+	dataObjectArray, err = body.GetObjectArray("data")
 	if err != nil {
 		log.Println(err)
 		return
+		dataObject, err = body.GetObject("data")
+		if err != nil {
+			if strings.Contains(fmt.Sprint(err), dataNotFound) {
+				//No errors. Empty response
+				c <- paginatedRequest{pageNumber, []*jason.Object{}}
+				return
+			}
+			logger.Println(err)
+			c <- paginatedRequest{pageNumber, []*jason.Object{}}
+			return
+		}
+		isObject = true
 	}
-	c <- paginatedRequest{pageNumber, data}
+
+	if isObject {
+		c <- paginatedRequest{pageNumber, []*jason.Object{dataObject}}
+	} else {
+		c <- paginatedRequest{pageNumber, dataObjectArray}
+	}
 }
 
 //Continents request for all continents
