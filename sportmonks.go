@@ -26,6 +26,9 @@ type paginatedRequest struct {
 //this default should be used when requesting the first page or all pages
 var NoSpecificPage = 0
 
+//NoIncludes specifies the default of no includes
+var NoIncludes = ""
+
 //SetAPIToken sets the API token for sportmonks
 func SetAPIToken(s string) {
 	apiToken = s
@@ -82,7 +85,6 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 		}
 		isObject = true
 	}
-
 	if allPages {
 		pages, err := body.GetInt64("meta", "pagination", "total_pages")
 		//	No error means endpoint is paginated
