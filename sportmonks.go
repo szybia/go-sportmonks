@@ -73,9 +73,9 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 	var dataObject *jason.Object
 	var dataObjectArray []*jason.Object
 
-	dataObjectArray, err = body.GetObjectArray("")
+	dataObjectArray, err = body.GetObjectArray("data")
 	if err != nil {
-		dataObject, err = body.GetObject("")
+		dataObject, err = body.GetObject("data")
 		if err != nil {
 			if strings.Contains(fmt.Sprint(err), dataNotFound) {
 				//No errors. Empty response
