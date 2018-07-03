@@ -24,12 +24,18 @@ type paginatedRequest struct {
 	data       []*jason.Object
 }
 
-//NoSpecificPage specifies the default when a specific page is not requested
-//this default should be used when requesting the first page or all pages
-var NoSpecificPage = 0
-
 //NoIncludes specifies the default of no includes
 var NoIncludes = ""
+
+//FirstOrAllPages specifies the default when a specific page is not requested
+//this default should be used when requesting the first page or all pages
+var FirstOrAllPages = 0
+
+//AllPages specifies to fetch all pages available for that request
+var AllPages = true
+
+//SinglePage specifies to only fetch a single page for the request
+var SinglePage = false
 
 //SetAPIToken sets the API token for sportmonks
 func SetAPIToken(s string) {
@@ -55,7 +61,7 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 	if include != "" {
 		q.Add("include", include)
 	}
-	if page != NoSpecificPage {
+	if page != FirstOrAllPages {
 		q.Add("page", strconv.Itoa(page))
 		allPages = false
 	}
@@ -181,12 +187,12 @@ func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 
 //Continents request for all continents
 func Continents(include string) ([]byte, error) {
-	return Get("continents", include, NoSpecificPage, false)
+	return Get("continents", include, FirstOrAllPages, SinglePage)
 }
 
 //Continent request for continent identified by supplied ID
 func Continent(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("continents/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("continents/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Countries request for all countries
@@ -196,7 +202,7 @@ func Countries(include string, page int, allPages bool) ([]byte, error) {
 
 //Country request for specific country identified by ID
 func Country(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("countries/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("countries/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Leagues request for all leagues
@@ -206,7 +212,7 @@ func Leagues(include string, page int, allPages bool) ([]byte, error) {
 
 //League request for specific league identified by ID
 func League(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("leagues/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("leagues/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Seasons request for all seasons
@@ -216,12 +222,12 @@ func Seasons(include string, page int, allPages bool) ([]byte, error) {
 
 //Season request for specific season identified by ID
 func Season(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("seasons/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("seasons/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Fixture request for specific fixture identified by ID
 func Fixture(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("fixtures/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("fixtures/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //FixturesFromToDateTeam fetches all fixtures between the specified dates for the team identified by teamID
@@ -241,27 +247,27 @@ func FixturesFromToDate(fromDate, toDate string, include string, page int, allPa
 
 //FixturesMultipleList fetches all fixtures with IDs contained in the supplied comma-seperated int string
 func FixturesMultipleList(IDs, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("fixtures/multi/%v", IDs), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("fixtures/multi/%v", IDs), include, FirstOrAllPages, SinglePage)
 }
 
 //FixturesMultipleIntList fetches all fixtures with IDs contained in the supplied int slice
 func FixturesMultipleIntList(IDs []int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("fixtures/multi/%v", IntSliceToSepString(IDs, ",")), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("fixtures/multi/%v", IntSliceToSepString(IDs, ",")), include, FirstOrAllPages, SinglePage)
 }
 
 //StagesSeason fetches all stages for season specified by ID
 func StagesSeason(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("stages/season/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("stages/season/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Stage fetches stage identified by ID
 func Stage(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("stages/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("stages/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //LivescoresNow fetches live fixtures
 func LivescoresNow(include string) ([]byte, error) {
-	return Get("livescores/now", include, NoSpecificPage, false)
+	return Get("livescores/now", include, FirstOrAllPages, SinglePage)
 }
 
 //Livescores fetches fixtures which are played today
@@ -271,7 +277,7 @@ func Livescores(include string, page int, allPages bool) ([]byte, error) {
 
 //CommentariesFixture fetches textual representations of events within a fixture
 func CommentariesFixture(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("commentaries/fixture/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("commentaries/fixture/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //VideoHighlights fetches links to videos posted on social media (Community feature)
@@ -281,112 +287,112 @@ func VideoHighlights(include string, page int, allPages bool) ([]byte, error) {
 
 //Head2Head fetches all fixtures involving two teams
 func Head2Head(team1ID, team2ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("head2head/%v/%v", team1ID, team2ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("head2head/%v/%v", team1ID, team2ID), include, FirstOrAllPages, SinglePage)
 }
 
 //TvStationsFixture fetches all Tv stations which broadcast the specified fixture
 func TvStationsFixture(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("tvstations/fixture/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("tvstations/fixture/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //StandingsSeason fetches standings for the specified season
 func StandingsSeason(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("standings/season/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("standings/season/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //LiveStandingsSeason fetches live standings for the specified season
 func LiveStandingsSeason(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("standings/season/live/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("standings/season/live/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Team fetches a team identified by specified ID
 func Team(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("teams/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("teams/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //SeasonTeams fetches all teams from a specified season
 func SeasonTeams(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("teams/season/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("teams/season/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //SeasonTopScorer fetches the top goal scorers for a specified season
 func SeasonTopScorer(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("topscorers/season/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("topscorers/season/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Venue fetches a venue specified by ID
 func Venue(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("venues/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("venues/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //SeasonVenues fetches venues for specified season
 func SeasonVenues(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("venues/season/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("venues/season/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //SeasonRounds fetches all rounds for specified season
 func SeasonRounds(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("rounds/season/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("rounds/season/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //Round fetches round specified by ID
 func Round(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("rounds/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("rounds/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //OddsFixtureBookmaker fetches betting information for specified fixture for specified bookmaker
 func OddsFixtureBookmaker(fixtureID, bookmakerID int) ([]byte, error) {
-	return Get(fmt.Sprintf("odds/fixture/%v/bookmaker/%v", fixtureID, bookmakerID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("odds/fixture/%v/bookmaker/%v", fixtureID, bookmakerID), "", FirstOrAllPages, SinglePage)
 }
 
 //OddsFixture fetches betting odds for specified fixture
 func OddsFixture(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("odds/fixture/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("odds/fixture/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //OddsFixtureMarket fetches betting odds for specified fixture for specified market
 func OddsFixtureMarket(fixtureID, marketID int) ([]byte, error) {
-	return Get(fmt.Sprintf("odds/fixture/%v/market/%v", fixtureID, marketID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("odds/fixture/%v/market/%v", fixtureID, marketID), "", FirstOrAllPages, SinglePage)
 }
 
 //OddsInPlayFixture fetches in play odds for specified fixture
 func OddsInPlayFixture(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("odds/inplay/fixture/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("odds/inplay/fixture/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //Bookmakers fetches all bookmakers
 func Bookmakers() ([]byte, error) {
-	return Get("bookmakers", "", NoSpecificPage, false)
+	return Get("bookmakers", "", FirstOrAllPages, SinglePage)
 }
 
 //Bookmaker fetches bookmaker specified by ID
 func Bookmaker(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("bookmakers/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("bookmakers/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //Markets fetches all markets
 func Markets() ([]byte, error) {
-	return Get("markets", "", NoSpecificPage, false)
+	return Get("markets", "", FirstOrAllPages, SinglePage)
 }
 
 //Market fetches a market specified by ID
 func Market(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("markets/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("markets/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //Player fetches a player specified by ID
 func Player(ID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("players/%v", ID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("players/%v", ID), include, FirstOrAllPages, SinglePage)
 }
 
 //SeasonTeamSquad fetches a squad for a specified team for a specified season
 func SeasonTeamSquad(seasonID, teamID int, include string) ([]byte, error) {
-	return Get(fmt.Sprintf("squad/season/%v/team/%v", seasonID, teamID), include, NoSpecificPage, false)
+	return Get(fmt.Sprintf("squad/season/%v/team/%v", seasonID, teamID), include, FirstOrAllPages, SinglePage)
 }
 
 //Coach fetches a squad specified by ID
 func Coach(ID int) ([]byte, error) {
-	return Get(fmt.Sprintf("coaches/%v", ID), "", NoSpecificPage, false)
+	return Get(fmt.Sprintf("coaches/%v", ID), "", FirstOrAllPages, SinglePage)
 }
 
 //IntSliceToSepString takes a int slice and generates a string of values seperated by specified seperator
