@@ -15,6 +15,8 @@ import (
 var apiToken = ""
 var apiURL = "https://soccer.sportmonks.com/api/v2.0/"
 var dataNotFound = "key 'data' not found"
+var tooManyAttemptsError = "invalid character 'T' looking for beginning of value"
+var tooManyAttemptsMessage = "Too Many Attempts."
 
 //Logger is a dedicated sportmonks logger
 var Logger = log.Logger{}
@@ -74,6 +76,9 @@ func Get(endpoint string, include string, page int, allPages bool) ([]byte, erro
 
 	body, err := jason.NewObjectFromReader(resp.Body)
 	if err != nil {
+		if strings.Contains(fmt.Sprint(err), tooManyAttemptsError) {
+			err = errors.New(tooManyAttemptsMessage)
+		}
 		return []byte{}, err
 	}
 
@@ -153,6 +158,10 @@ func getRequest(requestURL string, pageNumber int64, c chan paginatedRequest) {
 
 	body, err := jason.NewObjectFromReader(resp.Body)
 	if err != nil {
+		if strings.Contains(fmt.Sprint(err), tooManyAttemptsError) {
+			err = errors.New(tooManyAttemptsMessage)
+		}
+
 		Logger.Println(err)
 		c <- paginatedRequest{pageNumber, []*jason.Object{}}
 		return
