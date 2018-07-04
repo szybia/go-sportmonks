@@ -19,8 +19,8 @@ import (
 func main() {
 	sportmonks.SetAPIToken("<YOUR_TOKEN_HERE>")
 	g, err := sportmonks.Get("fixtures/between/2016-01-01/2018-01-01", "", 0, false)
-  //  Can also use sportmonks.NoIncludes and sportmonks.NoSpecificPage for code clarity and readability
-  //  g, err := sportmonks.Get("fixtures/between/2016-01-01/2018-01-01", sportmonks.NoIncludes, sportmonks.NoSpecificPage, true)
+  //  Can also use sportmonks globals for code clarity and readability
+  //  g, err := sportmonks.Get("fixtures/between/2016-01-01/2018-01-01", sportmonks.NoIncludes, sportmonks.FirstOrAllPages, sportmonks.SinglePage)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,8 +30,8 @@ func main() {
 
 - Contains functions for all Sportmonks endpoints as well as base custom Get function
 ```golang
-g, err := sportmonks.Leagues(sportmonks.NoIncludes, sportmonks.NoSpecificPage, true)
-g, err := sportmonks.Seasons(sportmonks.NoIncludes, sportmonks.NoSpecificPage, true)
+g, err := sportmonks.Leagues("", 0, true)
+g, err := sportmonks.Seasons("", 0, true)
 g, err := sportmonks.LivescoresNow(sportmonks.NoIncludes)
 ```
 - Contains build in logger which is used for goroutine errors. Logger can be altered to requirements
