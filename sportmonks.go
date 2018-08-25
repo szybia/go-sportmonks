@@ -254,7 +254,7 @@ func FixturesFromToDate(fromDate, toDate string, include string, page int, allPa
 	return Get(fmt.Sprintf("fixtures/between/%v/%v", fromDate, toDate), include, page, allPages)
 }
 
-//FixturesMultipleList fetches all fixtures with IDs contained in the supplied comma-seperated int string
+//FixturesMultipleList fetches all fixtures with IDs contained in the supplied comma-separated int string
 func FixturesMultipleList(IDs, include string) ([]byte, error) {
 	return Get(fmt.Sprintf("fixtures/multi/%v", IDs), include, FirstOrAllPages, SinglePage)
 }
