@@ -403,16 +403,3 @@ func SeasonTeamSquad(seasonID, teamID int, include string) ([]byte, error) {
 func Coach(ID int) ([]byte, error) {
 	return Get(fmt.Sprintf("coaches/%v", ID), "", FirstOrAllPages, SinglePage)
 }
-
-//IntSliceToSepString takes a int slice and generates a string of values seperated by specified seperator
-func IntSliceToSepString(a []int, sep string) string {
-	if len(a) == 0 {
-		return ""
-	}
-
-	b := make([]string, len(a))
-	for i, v := range a {
-		b[i] = strconv.Itoa(v)
-	}
-	return strings.Join(b, sep)
-}
