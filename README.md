@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/BialkowskiSz/go-sportmonks.svg?branch=master)](https://travis-ci.org/BialkowskiSz/go-sportmonks)
-[![Go Report Card](https://goreportcard.com/badge/github.com/BialkowskiSz/go-sportmonks)](https://goreportcard.com/report/github.com/BialkowskiSz/go-sportmonks)
-[![License](https://img.shields.io/badge/license-apache2.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/BialkowskiSz/go-sportmonks/master/LICENSE)
+[![Build Status](https://travis-ci.org/szybia/go-sportmonks.svg?branch=master)](https://travis-ci.org/szybia/go-sportmonks)
+[![Go Report Card](https://goreportcard.com/badge/github.com/szybia/go-sportmonks)](https://goreportcard.com/report/github.com/szybia/go-sportmonks)
+[![License](https://img.shields.io/badge/license-apache2.0-blue.svg?style=flat-square)](https://raw.githubusercontent.com/szybia/go-sportmonks/master/LICENSE)
 
 # golang-sportmonks
 Golang wrapper for the Sportmonks Soccer API  
@@ -8,7 +8,7 @@ Golang wrapper for the Sportmonks Soccer API
 
 ## Installation
 ```bash
-$ go get github.com/BialkowskiSz/go-sportmonks
+$ go get github.com/szybia/go-sportmonks
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"log"
 
-	sm "github.com/BialkowskiSz/go-sportmonks"
+	sm "github.com/szybia/go-sportmonks"
 )
 
 func main() {
